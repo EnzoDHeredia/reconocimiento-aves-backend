@@ -3,7 +3,7 @@ from flask_cors import CORS
 from PIL import Image
 import torch
 from torchvision import transforms
-from torchvision.models import efficientnet_b1
+from torchvision.models import efficientnet_b0
 import os
 import requests
 import json
@@ -14,7 +14,7 @@ from werkzeug.utils import secure_filename
 IMG_SIZE = (224, 224)
 DEVICE = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
 THRESHOLD = 0.65  # Umbral de confianza para la predicción
-MODEL_PATH = os.environ.get('MODEL_PATH', 'model/modelo_102_B1.pth')
+MODEL_PATH = os.environ.get('MODEL_PATH', 'model/modelo_102_B0.pth')
 EBIRD_TAXONOMY_PATH = os.environ.get('EBIRD_TAXONOMY_PATH', 'ebird_taxonomy.json')
 CLASSES_PATH = os.environ.get('CLASSES_PATH', 'classes.json')
 NOMBRE_COMUN_PATH = os.environ.get('NOMBRE_COMUN_PATH', 'nombre_comun_a_cientifico.json')
@@ -68,7 +68,7 @@ transform = transforms.Compose([
 idx_to_class = {i: name for i, name in enumerate(CLASSES)}
 
 # Cargar modelo EfficientNet_B0
-model = efficientnet_b1(weights=None)
+model = efficientnet_b0(weights=None)
 model.classifier[1] = torch.nn.Linear(model.classifier[1].in_features, len(idx_to_class))
 model.load_state_dict(torch.load(MODEL_PATH, map_location=DEVICE))
 model = model.to(DEVICE)
