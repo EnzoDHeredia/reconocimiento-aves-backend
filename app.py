@@ -101,6 +101,7 @@ def predict_class(tensor):
 
 @app.route('/predict', methods=['POST'])
 def predict():
+    print("Recibida petición a /predict")
     if 'file' not in request.files:
         return jsonify({'error': 'No file part'}), 400
     file = request.files['file']
@@ -125,6 +126,7 @@ def predict():
         predicted_class = idx_to_class[pred_idx]
         ebird_info = get_ebird_info(predicted_class)
 
+    print(f"Predicción: {predicted_class}, Confianza: {confidence}")
     return jsonify({
         'class': predicted_class,
         'index': pred_idx,
@@ -135,4 +137,5 @@ def predict():
 if __name__ == '__main__':
     import os
     port = int(os.environ.get("PORT", 5000))
+    print(f"Arrancando backend en 0.0.0.0:{port}")
     app.run(host="0.0.0.0", port=port)
